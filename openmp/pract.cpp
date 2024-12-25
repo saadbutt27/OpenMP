@@ -59,23 +59,19 @@ void nested_parallel_example() {
 
     #pragma omp parallel private(outer_threads)
     {
-        #pragma omp critical
-        {
-            outer_threads = omp_get_thread_num();
+        outer_threads = omp_get_thread_num();
 
-            cout << "Outer Thread ID: " << outer_threads << " in Level 1" << endl;
+        // cout << "Outer Thread ID: " << outer_threads << " in Level 1" << endl;
+        printf("Outer Thread ID: %d in Level 1\n", outer_threads);
 
-        }
 
         // Inner parallel region
         #pragma omp parallel private(inner_threads)
         {
-            #pragma omp critical
-            {
-                inner_threads = omp_get_thread_num();
-                cout << "    Inner Thread ID: " << inner_threads 
-                    << " (Outer Thread ID: " << outer_threads << ")" << endl;
-            }
+            inner_threads = omp_get_thread_num();
+            // cout << "    Inner Thread ID: " << inner_threads 
+            //     << " (Outer Thread ID: " << outer_threads << ")" << endl;
+            printf("    Inner Thread ID: %d (Outer Thread ID: %d)\n", inner_threads, outer_threads);
         }
     }
 }
@@ -84,16 +80,18 @@ void nested_parallel_example() {
 void nested_parallel_example2() {
     omp_set_nested(1); // Enable nested parallelism
 
-    #pragma omp parallel num_threads(2) // Outer region: 2 threads
+    #pragma omp parallel num_threads(4) // Outer region: 2 threads
     {
         int outer_thread_id = omp_get_thread_num();
-        cout << "Outer Thread ID: " << outer_thread_id << " in Level 1" << endl;
+        // cout << "Outer Thread ID: " << outer_thread_id << " in Level 1" << endl;
+        printf("Outer Thread ID: %d in Level 1\n", outer_thread_id);
 
         #pragma omp parallel num_threads(3) // Inner region: 3 threads
         {
             int inner_thread_id = omp_get_thread_num();
-            cout << "    Inner Thread ID: " << inner_thread_id 
-                 << " (Outer Thread ID: " << outer_thread_id << ")" << endl;
+            // cout << "    Inner Thread ID: " << inner_thread_id 
+            //      << " (Outer Thread ID: " << outer_thread_id << ")" << endl;
+            printf("    Inner Thread ID: %d (Outer Thread ID: %d)\n", inner_thread_id, outer_thread_id);
         }
     }
 }
@@ -188,13 +186,13 @@ void shared_private_reduction_variables() {
 }
 
 int main() {
-    shared_private_reduction_variables();
+    // shared_private_reduction_variables();
 
     // critical_section();
 
     // parallel_for_loop();
 
-    // nested_parallel_example2();
+    nested_parallel_example2();
     // nested_parallel_example();
 
     // float array[100] = {0};
